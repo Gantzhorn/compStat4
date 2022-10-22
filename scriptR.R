@@ -1,4 +1,5 @@
 library(tidyverse)
+ggplot2::theme_set(theme_bw())
 library(microbenchmark)
 library(profvis)
 library(Rcpp)
