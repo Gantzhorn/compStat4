@@ -1,0 +1,67 @@
+\documentclass[a4paper, 11 pt]{article}
+\usepackage{datetime}
+\usepackage{lipsum}
+\setlength{\columnsep}{25 pt}
+\usepackage{tabularx,booktabs,caption}
+\usepackage{multicol,tabularx,capt-of}
+\usepackage{multirow}
+\usepackage{subcaption}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage{blkarray}
+\usepackage[margin=1.2in]{geometry}
+\usepackage{amsthm, amsmath, amssymb, amsfonts, commath, amsthm}
+\usepackage{placeins}
+\usepackage{graphicx}
+\usepackage{mathrsfs}
+\usepackage{listings}
+\usepackage{lastpage}
+\usepackage{enumerate}
+\usepackage{subcaption}
+\usepackage[danish]{babel}
+%\renewcommand{\qedsymbol}{\textit{Q.E.D}}
+\newtheorem{theorem}{Theorem}[section]
+\addto\captionsdanish{\renewcommand\proofname{Proof}}
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{corollary}{corollary}[section]
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\newcommand{\code}[1]{\texttt{#1}}
+\lhead{Anders Gantzhorn - tzk942}
+\chead{}
+\rhead{09-11-2022}
+\pagestyle{fancy}
+\setlength{\headheight}{15pt}
+\cfoot{\thepage\ af \pageref{LastPage}}
+\setcounter{section}{0}
+\title{Stochsatic gradient descent for logistic regression smoothing}
+\author{Anders G. Kristensen}
+\date{09-11-2022}
+\begin{document}
+\maketitle
+\section{The logistic regression model}
+\noindent We consider the logistic regression $y_i\in\{0,1\}, x_i\in\mathbb{R}$ s.t. $p_i(\beta) = P(Y_i = 1| X_i = x_i)$ and
+\[
+    \log\left(\frac{p_i(\beta)}{1-p_i(\beta)}\right) = f(x_i|\beta) = \left(\varphi_1(x_i), \dots, \varphi_p(x_i)\right)^\top\beta    
+\] 
+For some $\beta\in\mathbb{R}^p$ and fixed basis functions $\varphi_1(x_i), \dots, \varphi_p(x_i) : \mathbb{R} \to \mathbb{R}$. We aim to minimize the penalized log-likelihood.
+\[
+    H(\beta) = -\frac{1}{N}\sum_{i = 1}^N \left(y_i\log(p_i(\beta))+(1-y_i)\log(1-p_i(\beta))\right) + \lambda||f''_\beta||_2^2 
+\]
+over $\beta\in\mathbb{R^p}$.
+\section{Horse data}
+The dataset contains a couple of missing values we need to handle appropriately.
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{rllr}
+      \hline
+     & Dead & Missing & Count \\ 
+      \hline
+    & FALSE & FALSE & 426 \\ 
+    & FALSE & TRUE &  17 \\ 
+    & TRUE & FALSE & 106 \\ 
+    & TRUE & TRUE &   2 \\ 
+       \hline
+    \end{tabular}
+    \end{table}
+\end{document}
