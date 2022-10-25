@@ -35,7 +35,7 @@ grad <- function(x, alpha, beta, gamma, rho){
 ## Simuliation ##
 
 #Number of observations
-N <- 1000
+N <- 5000
 
 sigma <- 0.2
 epsilon <- rnorm(N, mean = 0, sd = sigma)
