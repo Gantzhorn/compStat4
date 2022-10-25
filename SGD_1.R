@@ -13,7 +13,15 @@ beta <- vector("list", N)
 initpar <- c(0.5,0.3, 0.1, 1.5)
 
 beta[[1]] <- initpar
-for (i in 2:N){
-  beta[[i]] <- beta[[i-1]] - rate(i) * grad(X[i], alpha0, beta0, gamma0, rho0)
+for (i in 2:10){
+  print(i)
+  print(glue::glue("alpha: ", beta[[i-1]][1]))
+  print(glue::glue("beta: ", beta[[i-1]][2]))
+  print(glue::glue("gamma: ", beta[[i-1]][3]))
+  print(glue::glue("rho: ", beta[[i-1]][4]))
+  beta[[i]] <- beta[[i-1]] - rate(i) * grad(X[i-1], beta[[i-1]][1],
+                                            beta[[i-1]][2],
+                                            beta[[i-1]][3],
+                                            beta[[i-1]][4])
 }
 

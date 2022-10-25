@@ -62,5 +62,18 @@ horse_missing <- horse_data %>%
   group_by(dead,missing) %>%
   summarise(n = n())
 
+dummy <- seq(-10,10, by = 0.5)
 
+alpha_col <- numeric(41)
+beta_col <- numeric(41)
+gamma_col <- numeric(41)
+rho_col <- numeric(41)
+
+for (i in seq_along(dummy)){
+  alpha_col[i] <- grad(X, dummy[i], beta0, gamma0, rho0)[1]
+  beta_col[i] <- grad(X, alpha0, dummy[i], gamma0, rho0)[2]
+  gamma_col[i] <- grad(X, alpha0, beta0, dummy[i], rho0)[3]
+  rho_col[i] <- grad(X, alpha0, beta0, gamma0, dummy[i])[4]
+}
+tester <- tibble(inp = dummy, alpha = alpha_col, beta = beta_col, gamma = gamma_col, rho = rho_col)
 
