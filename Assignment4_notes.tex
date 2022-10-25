@@ -39,29 +39,24 @@
 \date{09-11-2022}
 \begin{document}
 \maketitle
-\section{The logistic regression model}
-\noindent We consider the logistic regression $y_i\in\{0,1\}, x_i\in\mathbb{R}$ s.t. $p_i(\beta) = P(Y_i = 1| X_i = x_i)$ and
+\section{The log-logistic regression model}
+\noindent We consider the four parameter log-logistic dose-response model of the real-valued random variable, $Y$ given $x$. The model is defined as
 \[
-    \log\left(\frac{p_i(\beta)}{1-p_i(\beta)}\right) = f(x_i|\beta) = \left(\varphi_1(x_i), \dots, \varphi_p(x_i)\right)^\top\beta    
-\] 
-For some $\beta\in\mathbb{R}^p$ and fixed basis functions $\varphi_1(x_i), \dots, \varphi_p(x_i) : \mathbb{R} \to \mathbb{R}$. We aim to minimize the penalized log-likelihood.
-\[
-    H(\beta) = -\frac{1}{N}\sum_{i = 1}^N \left(y_i\log(p_i(\beta))+(1-y_i)\log(1-p_i(\beta))\right) + \lambda||f''_\beta||_2^2 
+    f(x|\alpha, \beta, \gamma, \rho) = \gamma + \frac{\rho-\gamma}{1+e^{\beta\log(x)-\alpha}}
 \]
-over $\beta\in\mathbb{R^p}$.
-\section{Horse data}
-The dataset contains a couple of missing values we need to handle appropriately.
-\begin{table}[ht]
-    \centering
-    \begin{tabular}{rllr}
-      \hline
-     & Dead & Missing & Count \\ 
-      \hline
-    & FALSE & FALSE & 426 \\ 
-    & FALSE & TRUE &  17 \\ 
-    & TRUE & FALSE & 106 \\ 
-    & TRUE & TRUE &   2 \\ 
-       \hline
-    \end{tabular}
-    \end{table}
+With $\alpha,\beta,\gamma,\rho\in\mathbb{R}$. We observe the noised variables
+\[
+    Y_i = f(x_i|\alpha,\beta,\gamma,\rho) + \varepsilon_i    
+\]
+for $i = 1,\dots, N$ and $\varepsilon_i\sim\mathcal{N}\left(0,\sigma^2\right)$ independent. We estimate $\left(\alpha,\beta,\gamma,\rho\right)\in\mathbb{R}^4$ by minimizing the non-linear least squares
+\[
+    H_N = \frac{1}{N}\sum_{i = 1}^N (y_i-f(x_i|\alpha,\beta,\gamma,\rho))^2 = \frac{1}{N}\sum_{i = 1}^N \left(y_i - \gamma + \frac{\gamma-\rho}{1+e^{\beta\log(x_i)-\alpha}}\right)^2
+\]
+We calculate the gradient of $H_N$ by computing the partial derivatives w.r.t the all the parameters.
+\begin{align*}
+    \frac{\partial H_N}{\partial \alpha}  &=  \frac{2}{N}\sum_{i = 1}^N \left(y_i-\gamma+\frac{\gamma-\rho}{1+e^{\beta\cdot\log(x_i)-\alpha}}\right)\frac{(\gamma-\rho)e^{\beta\log(x_i)-\alpha}}{\left(e^{\beta\log(x_i)-\alpha}+1\right)^2} \\
+    \frac{\partial H_N}{\partial \beta}  &=  -\frac{2}{N}\sum_{i = 1}^N \left(y_i-\gamma+\frac{\gamma-\rho}{1+e^{\beta\cdot\log(x_i)-\alpha}}\right)\frac{(\gamma-\rho)\log(x_i)e^{\beta\log(x_i)-\alpha}}{\left(e^{\beta\log(x_i)-\alpha}+1\right)^2}\\
+    \frac{\partial H_N}{\partial \gamma}  &=  \frac{2}{N}\sum_{i = 1}^N \left(y_i-\gamma+\frac{\gamma-\rho}{1+e^{\beta\cdot\log(x_i)-\alpha}}\right)\left(\frac{1}{1+e^{\beta\log(x_i)-\alpha}}-1\right)\\
+    \frac{\partial H_N}{\partial \rho}  &=  -\frac{2}{N}\sum_{i = 1}^N \left(y_i-\gamma+\frac{\gamma-\rho}{1+e^{\beta\cdot\log(x_i)-\alpha}}\right)\left(\frac{1}{1+e^{\beta\log(x_i)-\alpha}}\right)
+\end{align*}
 \end{document}
