@@ -9,9 +9,9 @@ decay_scheduler <- function(gamma1 = 1, a = 1, K = 1, gamma2, n1) {
 rate <- decay_scheduler(gamma1 = 0.5, K = 100)
 
 # Online learning
-omega <- 4
+omega <- 2
 
-sigma <- 1
+sigma <- 0.1
 
 max_iter <- 20000
 

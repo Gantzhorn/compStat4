@@ -6,6 +6,7 @@ library(Rcpp)
 library(splines)
 library(xtable)
 library(numDeriv)
+library(CSwR)
 
 ## Key-functions ##
 
