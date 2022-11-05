@@ -8,24 +8,22 @@ decay_scheduler <- function(gamma1 = 1, a = 1, K = 1, gamma2, n1) {
 
 rate <- decay_scheduler(gamma1 = 0.5, K = 100)
 
+# Online learning
 omega <- 4
 
-sigma <- 0.1
+sigma <- 1
 
-max_iter <- 5000
+max_iter <- 20000
 
 par <- numeric(max_iter*4)
 
 dim(par) <- c(max_iter, 4)
-
-error <- numeric(max_iter)
 
 initpar <- c(alpha0+runif(1,-1,1), beta0+runif(1,-1,1), gamma0+runif(1,-1,1), rho0+runif(1,-1,1))
 
 par[1, ] <- initpar
 
 for (i in 2:max_iter){
-  print(glue::glue(i, ": "))
   # Simulate online data 
   X <- rnorm(1, mean = 0, sd = omega)
   

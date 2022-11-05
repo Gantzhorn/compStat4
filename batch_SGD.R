@@ -1,0 +1,1 @@
+# Batch stochastic gradient algorithm

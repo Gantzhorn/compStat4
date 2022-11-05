@@ -5,7 +5,6 @@ library(profvis)
 library(Rcpp)
 library(splines)
 library(xtable)
-library(Matrix)
 library(numDeriv)
 
 ## Key-functions ##
@@ -51,7 +50,7 @@ rho0 <- 2
 
 
 # Grad-test
-test_points <- c()
+test_points <- c(1,1)
 obj_func <- function(inp){
   1/length(test_points[1])*(sum((test_points[2]-densY(test_points[1], inp[1], inp[2], inp[3], inp[4]))^2))
 }
