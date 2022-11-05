@@ -26,7 +26,7 @@ SG <- function(
     for (j in 1:N){
       i <- samp[j]
       par <- par - gamma[k] * grad_calc(X[i], Y[i], par[1], par[2], par[3], par[4])
-
+      
     }
   }
   par
@@ -37,7 +37,14 @@ SG <- function(
 loglogis_SG_tracer <- tracer("par", N = 0)
 
 res <- SG(initpar,
-   N = N,
-   gamma = rate,
-   cb = loglogis_SG_tracer$tracer)
+          N = N,
+          gamma = rate,
+          cb = loglogis_SG_tracer$tracer)
 
+# Plot estimates against true values
+summary(loglogis_SG_tracer) %>% as_tibble() %>% rename("alpha" = par.1, "beta" = par.2, "gamma" = par.3, "rho" = par.4, "time" = .time) %>% 
+  pivot_longer(cols = -time, names_to = "Parameter", values_to = "Estimate") %>% 
+  ggplot(aes(x = time, y = Estimate, col = Parameter)) + geom_line(size = 1) +
+  geom_hline(data = trueval_tibble, aes(yintercept = Value, col = Parameter), linetype = "dashed", size = 1)
+
+# Objective function
