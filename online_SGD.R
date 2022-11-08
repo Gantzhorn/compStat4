@@ -6,31 +6,31 @@ decay_scheduler <- function(gamma1 = 1, a = 1, K = 1, gamma2, n1) {
   function(n) b / (K + n^a)
 }
 
-rate <- decay_scheduler(gamma1 = 0.5, K = 100)
+rate <- decay_scheduler(gamma1 = 0.1, K = 100)
 
 # Online learning
 
-initpar <- c(alpha0 + runif(1,-1,1), beta0 + runif(1,-1,1), gamma0 + runif(1,-1,1), rho0 + runif(1,-1,1))
+initpar <- c(alpha0+2*runif(1,-1,1), beta0+2*runif(1,-1,1), gamma0+2*runif(1,-1,1), rho0+2*runif(1,-1,1))
 
 online_SG <- function(
-    par0,
+    par,
     gamma,
-    maxiter = 10000,
+    maxiter = 1000,
     cb = NULL,
+    epsilon = 1e-10,
     ...
 ){
   gamma <- if(is.function(gamma))gamma(1:maxiter) else rep(gamma, (maxiter))
-  par <- par0
   for (i in 1:maxiter){
     if(!is.null(cb)) cb()
     # Simulate online data 
     X <- rnorm(1, mean = 0, sd = omega)
-    
     epsilon <- rnorm(1, mean = 0, sd = sigma) 
     
     Y <- densY(X, alpha0, beta0, gamma0, rho0) + epsilon
     
     par <- par - gamma[i] * grad_calc(X, Y, par[1],par[2], par[3], par[4])
+
   }
   par
 }

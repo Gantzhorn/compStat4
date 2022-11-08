@@ -3,7 +3,6 @@ ggplot2::theme_set(theme_bw())
 library(microbenchmark)
 library(profvis)
 library(Rcpp)
-library(splines)
 library(xtable)
 library(numDeriv)
 library(CSwR)
@@ -44,15 +43,15 @@ grad_calc <- function(x, y, alpha, beta, gamma, rho){
 
 #True parameters
 alpha0 <- 1
-beta0 <- 0.5
-gamma0 <- -0.5
-rho0 <- -1
+beta0 <- 2
+gamma0 <- -1
+rho0 <- 0.5
 
 
 trueval_tibble <- tibble(Parameter = c("alpha", "beta", "gamma", "rho"), Value = c(alpha0, beta0, gamma0, rho0))
 
 # Sim parameters
-sigma <- 0.1
+sigma <- 0.5
 
 omega <- 5
 
@@ -63,12 +62,12 @@ test_points <- c(1,1)
 obj_func <- function(x, y, param){
   1/length(x)*(sum((y-densY(x, param[1], param[2], param[3], param[4]))^2))
 }
-obj_func_test <- function(param){
-  1/length(test_points[1])*(sum((test_points[2]-densY(test_points[1], param[1], param[2], param[3], param[4]))^2))
+obj_func_test <- function(param, x_inp, y_inp){
+  1/length(x_inp)*(sum((y_inp-densY(x_inp, param[1], param[2], param[3], param[4]))^2))
 }
 
 
 
 grad_calc(test_points[1], test_points[2], alpha0, beta0, gamma0, rho0)
 
-numDeriv::grad(obj_func_test, x = c(alpha0, beta0, gamma0, rho0))
+numDeriv::grad(obj_func_test, x = c(alpha0, beta0, gamma0, rho0), x_inp = test_points[1], y_inp = test_points[2])

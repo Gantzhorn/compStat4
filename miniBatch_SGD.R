@@ -6,14 +6,18 @@ SG_mini <- function(
     ...,               
     maxiter = 100,    
     sampler = sample,  
-    cb = NULL
+    cb = NULL,
+    epsilon = 1e-5
 ) {
   gamma <- if (is.function(gamma)) gamma(1:maxiter) else rep(gamma, maxiter) 
   for(k in 1:maxiter) {
+    par0 <- par
     if(!is.null(cb)) cb()
     samp <- sampler(N)
-    par <- epoch(par, samp, gamma[k], ...)
+    par <- epoch(par0, samp, gamma[k], ...)
+    if(sum((par-par0)^2)<epsilon) break
   }
+  if(k == maxiter){print("Maxiter reached")}
   par
 }
 
@@ -33,7 +37,7 @@ batch <- function(
 }
 
 SG_tracer <- tracer("par", N = 0)
-SG_mini(initpar,
+SG_mini(par = c(1,1,0.5,2),
         N = length(X),
         gamma = 5e-2,
         maxiter = 200,
