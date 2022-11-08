@@ -122,7 +122,7 @@ bind_rows(errorpath_batch,
   mutate(squarederror = (par.1-alpha0)^2+(par.2-beta0)^2+(par.3-gamma0)^2+(par.4-rho0)^2,
          time = .time) %>% 
   ggplot(aes(x = log(time), y = log(squarederror), col = type)) + geom_line(size = .9) +
-  facet_wrap(~N,ncol = 4, labeller = ) + theme(axis.title = element_text(face = "bold", size = 14),
+  facet_wrap(~N,ncol = 4) + theme(axis.title = element_text(face = "bold", size = 14),
                                   axis.text = element_text(face = "bold", size = 12),
                                   legend.title = element_text(face = "bold", size = 16),
                                   legend.text = element_text(face = "bold", size =12),
@@ -131,3 +131,22 @@ bind_rows(errorpath_batch,
 # Profiling
 profvis::profvis(source("~/Desktop/Skole/Compstat/Assignment4/compStat4/batch_SGD.R"))
 
+sourceCpp("SGD_rcpp.cpp")
+
+
+
+
+a <- microbenchmark::microbenchmark(SG(initpar, N, rate, sampler = cppsample, gradient = grad_calc_cpp),
+               SG(initpar, N, rate, sampler = sample, gradient = grad_calc_cpp),
+               SG(initpar, N, rate, sampler = sample, gradient = grad_calc),
+               SG(initpar, N, rate, sampler = cppsample, gradient = grad_calc))
+
+as_tibble(a) %>% mutate(time = time/100000000000) %>% ggplot(aes(x = log(time), fill = expr)) + geom_density() +
+  theme(axis.title = element_text(face = "bold", size = 14),
+        axis.text = element_text(face = "bold", size = 12),
+        legend.title = element_text(face = "bold", size = 16),
+        legend.text = element_text(face = "bold", size =12),
+        strip.text = element_text(face = "bold", size = 12)) +
+  scale_fill_discrete(labels=c('RcppSample & RcppGradient', 'RSample & RcppGradient',
+                               'RSample & RGradient', 'RcppSample & RGradient')) +
+  labs(fill='Evaluation')

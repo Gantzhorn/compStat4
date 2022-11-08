@@ -11,18 +11,19 @@ Rcpp::NumericVector grad_calc_cpp(Rcpp::NumericVector x, Rcpp::NumericVector y,
                                   double alpha, double beta, double gamma, double rho){
   double N = x.length();
   
-  double grad_alpha = 2/N*sum((y-gamma+(gamma-rho)/(1+Rcpp::exp(beta*x-alpha)))*((gamma-rho)*Rcpp::exp(beta*x-alpha))/(Rcpp::pow(Rcpp::exp(beta*x-alpha)+1, 2)));
-
+  double grad_alpha =  2/N*sum((y-gamma+(gamma-rho)/(1+Rcpp::exp(beta*x-alpha)))*((gamma-rho)*Rcpp::exp(beta*x-alpha))/(Rcpp::pow(Rcpp::exp(beta*x-alpha)+1, 2)));
+  
   double grad_beta = -2/N*Rcpp::sum((y-gamma+(gamma-rho)/(1+Rcpp::exp(beta*x-alpha)))*((gamma-rho)*x*Rcpp::exp(beta*x-alpha))/(Rcpp::pow(Rcpp::exp(beta*x-alpha)+1, 2)));
-
+  
   double grad_gamma = 2/N*Rcpp::sum((y-gamma+(gamma-rho)/(1+Rcpp::exp(beta*x-alpha)))*(1/(1+Rcpp::exp(beta*x-alpha))-1));
-
+  
   double grad_rho = -2/N*Rcpp::sum((y-gamma+(gamma-rho)/(1+Rcpp::exp(beta*x-alpha)))*(1/(1+Rcpp::exp(beta*x-alpha))));
-
+  
   Rcpp::NumericVector v(4);
   v[0] = grad_alpha; v[1] = grad_beta; v[2] = grad_gamma; v[3] = grad_rho;
   return v;
 }
+
 
 // [[Rcpp::export]]
 Rcpp::NumericVector SG_cpp(Rcpp::NumericVector par,

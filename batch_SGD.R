@@ -2,7 +2,7 @@
 
 # Simulation
 
-N <- 50000
+N <- 10000
 
 X <- rnorm(N, mean = 0, sd = omega)
 
@@ -14,6 +14,7 @@ SG <- function(
     par,
     N,
     gamma,
+    gradient = grad_calc,
     maxiter = 500,
     sampler = sample,
     cb = NULL,
@@ -27,7 +28,7 @@ SG <- function(
     for (j in 1:N){
       par0 <- par
       i <- samp[j]
-      par <- par0 - gamma[k] * grad_calc(X[i], Y[i], par0[1], par0[2], par0[3], par0[4])
+      par <- par0 - gamma[k] * gradient(X[i], Y[i], par0[1], par0[2], par0[3], par0[4])
       if(sum((par-par0)^2)<epsilon) break
     }
   }
@@ -42,6 +43,8 @@ res <- SG(initpar,
           N = N,
           gamma = rate,
           cb = loglogis_SG_tracer$tracer)
+
+
 
 
 # Plot estimates against true values and initial values
