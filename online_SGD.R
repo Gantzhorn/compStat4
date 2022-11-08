@@ -14,7 +14,7 @@ initpar <- c(alpha0+2*runif(1,-1,1), beta0+2*runif(1,-1,1), gamma0+2*runif(1,-1,
 
 online_SG <- function(
     par,
-    gamma,
+    gamma = rate,
     maxiter = 1000,
     cb = NULL,
     epsilon = 1e-10,

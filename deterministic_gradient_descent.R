@@ -1,5 +1,5 @@
 gradient_descent <- function(par,
-                             gamma = 0.5,
+                             gamma = rate,
                              maxiter = 400,
                              epsilon = 1e-06,
                              cb = NULL){
@@ -17,9 +17,9 @@ gradient_descent <- function(par,
   par
 }
 
-deter_tracer <- CSwR::tracer(c("par"))
+deter_tracer <- CSwR::tracer(c("par"), N =0)
 
-gradient_descent(par = c(4.5,3,0.5,2), gamma = rate, cb = deter_tracer$tracer)
+gradient_descent(par = initpar, gamma = rate, cb = deter_tracer$tracer)
 
 summary(deter_tracer) %>% as_tibble() %>% rename("alpha" = par.1, "beta" = par.2, "gamma" = par.3, "rho" = par.4, "time" = .time) %>% 
   pivot_longer(cols = -time, names_to = "Parameter", values_to = "Estimate") %>% 
